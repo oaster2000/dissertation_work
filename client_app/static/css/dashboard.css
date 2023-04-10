@@ -1,0 +1,76 @@
+.header{
+    width: 100%;
+    background-color: rgb(163, 163, 163);
+}
+
+.header-item{
+    padding: 25px 10px 25px 20px;
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.5rem;
+    color: rgb(59, 59, 59);
+    font-weight: bolder;
+}
+
+body{
+    margin: 0px;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.drawer-closed{
+    position:absolute;
+    top: 8.25%;
+    height: calc(75% - 20px);
+    width: calc(1% - 20px);
+    background-color: rgba(200, 200, 200);
+    left: 99%;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 10px;
+    transition: width 1s, left 1s;
+}
+
+.drawer-open{
+    position:absolute;
+    top: 8.25%;
+    height: calc(75% - 20px);
+    width: calc(25% - 20px);
+    background-color: rgba(200, 200, 200);
+    left: 75%;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 10px;
+    transition: width 1s, left 1s;
+}
+
+.drawer-button-closed{
+    position:absolute;
+    left: calc(1% - 40px);
+    top: calc(100% - 60px);
+    height: 50px;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+}
+
+.drawer-button-open{
+    position:absolute;
+    left: calc(1% - 40px);
+    top: calc(100% - 60px);
+    height: 50px;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+}
+
+.drawer-item-closed{
+    display: none;
+}
+
+.drawer-item-open{
+    flex: 0 1 auto;
+}

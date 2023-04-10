@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>COVD-19 Visual Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/dashboard.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/a1ed8dc3ba.js" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    function drawer() {
+      document.getElementById("drawer").classList.toggle('drawer-closed');
+      document.getElementById("drawer").classList.toggle('drawer-open');
+      document.getElementById("drawer-chart-one").classList.toggle('drawer-item-closed');
+      document.getElementById("drawer-chart-one").classList.toggle('drawer-item-open');
+      document.getElementById("drawer-chart-two").classList.toggle('drawer-item-closed');
+      document.getElementById("drawer-chart-two").classList.toggle('drawer-item-open');
+      document.getElementById("drawer-button").classList.toggle('drawer-button-closed');
+      document.getElementById("drawer-button").classList.toggle('drawer-button-open');
+    };
+  </script>  
+</head>
+
+<body>
+  <div class="header">
+    <div class="header-item">COVD-19 Visual Dashboard</div>
+  </div>
+  <div class="map">{{ map|safe }}</div>
+  <div class="drawer-closed" id="drawer">
+    <button onclick="drawer()" class="drawer-button-closed" id="drawer-button"><i class="fa-solid fa-bars" style="color: Dodgerblue; font-size: 3em;"></i></button>
+    <div class="drawer-item-closed" id="drawer-chart-one"><canvas id="sentimentChart" style="width: 100%; height: 100%;"></canvas>
+    <script>
+      const data_sentiment = {
+        labels: {{ topic_lables | safe }},
+        datasets: [
+          {
+            label: "Topics",
+            data: {{ topic_values | safe }},
+            fill: true,
+            backgroundColor:[
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+          }
+        ]
+      };
+      
+      const config_sentiment = {
+        type: 'doughnut',
+        data: data_sentiment,
+      };
+      
+      const $chart_sentiment = document.getElementById("sentimentChart");
+      const chart_sentiment = new Chart($chart_sentiment, config_sentiment);
+    </script>
+    </div>
+    <div class="drawer-item-closed" id="drawer-chart-two">Example #2...</div>
+  </div>
+  <div class="graph">
+    <canvas id="lineChart" style="width: 100%; height: 5%;"></canvas>
+    <script>
+
+      const plugin = {
+        id: 'cursor',
+        defaults: {
+          width: 1,
+          color: '#FF4949',
+          dash: [0, 0],
+        },
+        afterInit: (chart, args, opts) => {
+          chart.corsair = {
+            x: 0,
+            y: 0,
+          }
+        },
+        afterEvent: (chart, args) => {
+          const { inChartArea } = args
+          const { type, x, y } = args.event
+
+          chart.corsair = { x, y, draw: inChartArea }
+          chart.draw()
+        },
+        beforeDatasetsDraw: (chart, args, opts) => {
+          const { ctx } = chart
+          const { top, bottom, left, right } = chart.chartArea
+          const { x, y, draw } = chart.corsair
+          if (!draw) return
+
+          ctx.save()
+
+          ctx.beginPath()
+          ctx.lineWidth = opts.width
+          ctx.strokeStyle = opts.color
+          ctx.setLineDash(opts.dash)
+          ctx.moveTo(x, bottom)
+          ctx.lineTo(x, top)
+          ctx.stroke()
+
+          ctx.restore()
+        }
+      }
+
+      const data = {
+        labels: {{ date_labels | safe }},
+        datasets: [
+          {
+            label: "Tweets",
+            data: {{ date_values | safe }},
+            fill: true,
+            borderColor: "rgb(75, 192, 192)",
+            lineTension: 0.15
+          }
+        ]
+      }
+      
+      const options = {
+        responsive: false,
+          scaleShowLabels: false,
+            onClick: (e) => {
+              const canvasPosition = Chart.helpers.getRelativePosition(e, chart);
+
+              // Substitute the appropriate scale IDs
+              const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            },
+              interaction: {
+          intersect: false,
+            mode: 'index'
+        },
+        scales: {
+          x: {
+            ticks: {
+              display: false
+            }
+          },
+          y: {
+            ticks: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          cursor: {
+            color: 'black',
+          }
+        }
+      }
+
+      const config = {
+        type: 'line',
+        data,
+        options,
+        plugins: [plugin],
+      }
+
+      const $chart = document.getElementById("lineChart");
+      const chart = new Chart($chart, config);
+    </script>
+  </div>
+  
+  <script>
+    var id = null;
+    function drawer_anim() {
+      var elem = document.getElementById("drawer");   
+      var pos = 0;
+      clearInterval(id);
+      id = setInterval(frame, 10);
+      function frame() {
+        if (pos == 350) {
+          clearInterval(id);
+        } else {
+          pos++; 
+          elem.style.top = pos + 'px'; 
+          elem.style.left = pos + 'px'; 
+        }
+      }
+    }
+    </script>
+</body>
+
+</html>
