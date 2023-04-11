@@ -14,7 +14,7 @@ class TweetData:
         
         #for x in range(1, 16):
         count = 0
-        with open('server_app/data_processing/assets/training_data.csv', 'r+', encoding="utf8") as file:
+        with open('server_app/assets/training_data.csv', 'r+', encoding="utf8") as file:
                 reader = csv.reader((x.replace('\0', '') for x in file), delimiter='␟')
                 headers = next(reader)
                 for row in reader:

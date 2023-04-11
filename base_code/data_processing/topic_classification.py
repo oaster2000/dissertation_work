@@ -5,7 +5,6 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import numpy as np
 import matplotlib.pyplot as plt
-from official.nlp import optimization
 import pandas as pd
 from keras import backend as K
 import csv

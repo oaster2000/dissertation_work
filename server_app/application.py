@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request, render_template_string
-import folium
 import pandas as pd
 import geopandas as gpd
 
@@ -15,7 +14,7 @@ class ServerApp(Flask):
 app = ServerApp(__name__)
 
 @app.route("/")
-def date():
+def index():
     return render_template_string("Server Active")
 
 @app.route("/date", methods=['GET'])
@@ -39,4 +38,4 @@ def place():
     return jsonify(app.tweet_data.place)
 
 if __name__ == '__main__':
-        app.run(debug=True, use_reloader=False)
+        app.run(host="0.0.0.0" debug=True, use_reloader=False)
